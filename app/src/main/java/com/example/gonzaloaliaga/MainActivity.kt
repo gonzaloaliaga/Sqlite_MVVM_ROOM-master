@@ -13,6 +13,8 @@ import com.example.gonzaloaliaga.ui.UsuarioViewModel
 import com.example.gonzaloaliaga.ui.UsuarioViewModelFactory
 import com.example.gonzaloaliaga.ui.screen.HomeScreen
 import com.example.gonzaloaliaga.ui.screen.LoginScreen
+import com.example.gonzaloaliaga.ui.screen.RegisterScreen
+
 // import com.example.gonzaloaliaga.ui.screen.RegisterScreen
 
 
@@ -24,27 +26,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             val navController = rememberNavController()
             NavHost(navController, startDestination = "login") {
 
                 composable("login") {
-                    LoginScreen(uservm) {
-                        navController.navigate("home") {
-                            popUpTo("login") { inclusive = true } // elimina login del backstack
+                    LoginScreen(
+                        uservm = uservm,
+                        navController = navController,
+                        onLoginSuccess = {
+                            navController.navigate("home") {
+                                popUpTo("home") { inclusive = true }
+                            }
                         }
-                    }
+                    )
                 }
-                /*
+
                 composable("register") {
-                    RegisterScreen(uservm) {
-                        navController.navigate("home") {
-                            popUpTo("register") { inclusive = true }
-                        }
-                    }
+                    RegisterScreen(uservm, navController)
                 }
-                */
+
                 composable("home") {
-                    HomeScreen(uservm, prodvm)
+                    HomeScreen(uservm, prodvm, navController)
                 }
             }
         }

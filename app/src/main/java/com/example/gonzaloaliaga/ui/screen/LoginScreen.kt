@@ -14,10 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.gonzaloaliaga.ui.UsuarioViewModel
 
 @Composable
-fun LoginScreen(uservm: UsuarioViewModel, onLoginSuccess: () -> Unit) {
+fun LoginScreen(uservm: UsuarioViewModel, navController: NavController, onLoginSuccess: () -> Unit) {
     val form by uservm.form.collectAsState()
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -36,6 +37,10 @@ fun LoginScreen(uservm: UsuarioViewModel, onLoginSuccess: () -> Unit) {
         form.error?.let { Text(it, color = Color.Red) }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("register") }) {
+            Text("Registrar")
+        }
 
         Button(onClick = { uservm.login(onLoginSuccess) }) {
             Text("Ingresar")

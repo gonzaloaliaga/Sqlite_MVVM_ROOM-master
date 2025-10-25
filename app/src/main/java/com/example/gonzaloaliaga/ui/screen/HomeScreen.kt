@@ -11,11 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.gonzaloaliaga.ui.ProductViewModel
 import com.example.gonzaloaliaga.ui.UsuarioViewModel
 
 @Composable
-fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel) {
+fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController: NavController) {
     val user by uservm.currentUser.collectAsState()
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -29,6 +30,9 @@ fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { uservm.logout() }) { Text("Cerrar sesión") }
+        Button(onClick = {
+            uservm.logout()
+            navController.navigate("login")
+        }) { Text("Cerrar sesión") }
     }
 }
