@@ -9,15 +9,16 @@ class ProductRepository(private val dao: ProductoDao) {
 
     suspend fun agregar(nombre: String, precio: Double, descripcion: String, categoria: String) {
         require(nombre.isNotBlank()) { "El nombre no puede estar vacío" }
-        require(precio >= 0) { "El precio no puede ser negativo" }
-        require(nombre.isNotBlank()) { "El nombre no puede estar vacío" }
+        require(precio > 0) { "El precio no puede ser negativo" }
+        require(descripcion.isNotBlank()) { "La descripción no puede estar vacío" }
+        require(categoria.isNotBlank()) { "La categoría no puede estar vacía" }
         dao.insert(Producto(nombre = nombre.trim(), precio = precio, descripcion = descripcion, categoria = categoria))
     }
 
     suspend fun actualizar(id: Long, nombre: String, precio: Double, descripcion: String, categoria: String) {
         require(id > 0) { "Id inválido" }
         require(nombre.isNotBlank()) { "El nombre no puede estar vacío" }
-        require(precio >= 0) { "El precio no puede ser negativo" }
+        require(precio > 0) { "El precio no puede ser negativo" }
         require(descripcion.isNotBlank()) { "La descripción no puede estar vacía" }
         require(categoria.isNotBlank()) { "La categoría no puede estar vacía" }
         dao.update(Producto(id = id, nombre = nombre.trim(), precio = precio, descripcion = descripcion, categoria = categoria))

@@ -22,11 +22,15 @@ fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Bienvenido, ${user?.nombre ?: "Usuario"}")
 
-        if (user?.rol == "admin") {
-            Button(onClick = { /* manejar productos */ }) { Text("Gestionar Productos") }
-            Button(onClick = { /* manejar usuarios */ }) { Text("Gestionar Usuarios") }
-        } else {
-            Button(onClick = { /* ver productos */ }) { Text("Ver Productos") }
+        if (user?.rol == "admin") { // Vista Admin
+            Button(onClick = { navController.navigate("catalog") }) { Text("Ver Productos") }
+            Button(onClick = { navController.navigate("cart") }) { Text("Ver Carrito") }
+            Button(onClick = { navController.navigate("about") }) { Text("Sobre nosotros") }
+            Button(onClick = { navController.navigate("adminScreen") }) { Text("Ir a panel de admin") }
+        } else { // Vista Cliente
+            Button(onClick = { navController.navigate("catalog") }) { Text("Ver Productos") }
+            Button(onClick = { navController.navigate("cart") }) { Text("Ver Carrito") }
+            Button(onClick = { navController.navigate("about") }) { Text("Sobre nosotros") }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
