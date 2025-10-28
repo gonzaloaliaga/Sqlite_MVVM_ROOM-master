@@ -44,7 +44,7 @@ fun AboutUsScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navControl
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            Text("Pendiente")
+            Text("Somos una empresa dedicada a ofrecer productos de calidad, con una amplia variedad de artículos que abarcan todas tus necesidades. Nos enfocamos en brindar una experiencia de compra confiable, ágil y accesible para todos nuestros clientes, procurando siempre la satisfacción y la confianza en cada compra. Nuestro compromiso es ofrecer productos útiles y de calidad a precios competitivos, adaptándonos a las necesidades de un mercado diverso y en constante cambio.")
         }
     }
 }

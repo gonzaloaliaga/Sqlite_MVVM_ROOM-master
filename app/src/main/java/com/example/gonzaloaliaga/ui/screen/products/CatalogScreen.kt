@@ -21,12 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.gonzaloaliaga.data.cart.CarritoViewModel
 import com.example.gonzaloaliaga.data.products.ProductViewModel
 import com.example.gonzaloaliaga.data.users.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController: NavController) {
+fun CatalogScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, cartvm: CarritoViewModel, navController: NavController) {
     val user by uservm.currentUser.collectAsState()
     val productos by prodvm.productos.collectAsState()
     val productosPorCategoria = productos.groupBy { it.categoria }
@@ -55,7 +56,7 @@ fun CatalogScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navControl
                 }
 
                 items(lista) { producto ->
-                    ProductCard(producto, navController)
+                    ProductCard(producto, cartvm, navController)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }

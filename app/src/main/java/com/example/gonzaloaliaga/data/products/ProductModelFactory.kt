@@ -1,17 +1,16 @@
 package com.example.gonzaloaliaga.data.products
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gonzaloaliaga.data.AppDatabase
 
 
-class ProductViewModelFactory(app: Application) : ViewModelProvider.Factory {
-    private val repo by lazy {
-        val dao = AppDatabase.get(app).productDao()
-        ProductRepository(dao)
-    }
+class ProductViewModelFactory(private val repo: ProductRepository) : ViewModelProvider.Factory {
+
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>) =
-        ProductViewModel(repo) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
+            return ProductViewModel(repo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }

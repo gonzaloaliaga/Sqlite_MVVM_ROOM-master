@@ -9,6 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.gonzaloaliaga.data.cart.CarritoViewModel
+import com.example.gonzaloaliaga.data.cart.CarritoViewModelFactory
 import com.example.gonzaloaliaga.data.products.ProductViewModel
 import com.example.gonzaloaliaga.data.products.ProductViewModelFactory
 import com.example.gonzaloaliaga.data.users.UsuarioViewModel
@@ -20,9 +22,19 @@ import com.example.gonzaloaliaga.ui.screen.products.CatalogScreen
 import com.example.gonzaloaliaga.ui.screen.products.ProductDetailScreen
 
 class MainActivity : ComponentActivity() {
+    private val app by lazy { application as MiApp }
 
-    private val uservm: UsuarioViewModel by viewModels { UsuarioViewModelFactory(application) }
-    private val prodvm: ProductViewModel by viewModels { ProductViewModelFactory(application) }
+    private val uservm: UsuarioViewModel by viewModels {
+        UsuarioViewModelFactory(app.usuarioRepository)
+    }
+
+    private val prodvm: ProductViewModel by viewModels {
+        ProductViewModelFactory(app.productRepository)
+    }
+
+    private val cartvm: CarritoViewModel by viewModels {
+        CarritoViewModelFactory(app.carritoRepository, uservm)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable("catalog") {
-                    CatalogScreen(uservm, prodvm, navController)
+                    CatalogScreen(uservm, prodvm, cartvm, navController)
                 }
 
                 composable(
@@ -60,11 +72,11 @@ class MainActivity : ComponentActivity() {
                     listOf(navArgument("productId") {type = NavType.LongType })
                 ) { backStackEntry ->
                     val productId = backStackEntry.arguments?.getLong("productId") ?: 0L
-                    ProductDetailScreen(uservm, prodvm, navController, productId)
+                    ProductDetailScreen(uservm, prodvm, cartvm, navController, productId)
                 }
 
                 composable("cart") {
-                    ShoppingCartScreen(uservm, prodvm, navController)
+                    ShoppingCartScreen(cartvm, navController)
                 }
 
                 composable("about") {

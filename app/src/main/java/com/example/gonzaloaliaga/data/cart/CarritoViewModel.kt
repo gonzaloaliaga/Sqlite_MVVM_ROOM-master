@@ -1,0 +1,51 @@
+package com.example.gonzaloaliaga.data.cart
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.gonzaloaliaga.data.users.UsuarioViewModel
+import com.example.gonzaloaliaga.model.Producto
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+
+class CarritoViewModel(
+    private val repository: CarritoRepository,
+    private val uservm: UsuarioViewModel
+) : ViewModel() {
+
+    private val _carrito = MutableStateFlow<List<CarritoConProducto>>(emptyList())
+    val carrito: StateFlow<List<CarritoConProducto>> = _carrito.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            uservm.currentUser.collect { user ->
+                if (user != null) {
+                    repository.obtenerCarrito(user.id).collect { items ->
+                        _carrito.value = items
+                    }
+                }
+            }
+        }
+    }
+
+    fun agregar(producto: Producto) = viewModelScope.launch {
+        val user = uservm.currentUser.value ?: return@launch
+        repository.agregarAlCarrito(user.id, producto.id)
+    }
+
+    fun restar(producto: Producto) = viewModelScope.launch {
+        val user = uservm.currentUser.value ?: return@launch
+        repository.restarDelCarrito(user.id, producto.id)
+    }
+
+    fun eliminar(producto: Producto) = viewModelScope.launch {
+        val user = uservm.currentUser.value ?: return@launch
+        repository.eliminar(user.id, producto.id)
+    }
+
+    fun vaciar() = viewModelScope.launch {
+        val user = uservm.currentUser.value ?: return@launch
+        repository.vaciar(user.id)
+    }
+
+    fun total(): Double = carrito.value.sumOf { it.precio * it.cantidad }
+}

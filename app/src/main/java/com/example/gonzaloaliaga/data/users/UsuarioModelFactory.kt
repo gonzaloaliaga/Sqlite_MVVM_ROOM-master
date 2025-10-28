@@ -1,17 +1,9 @@
 package com.example.gonzaloaliaga.data.users
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gonzaloaliaga.data.AppDatabase
-import kotlin.getValue
 
-class UsuarioViewModelFactory(app: Application) : ViewModelProvider.Factory {
-
-    private val repo: UsuarioRepository by lazy {
-        val dao = AppDatabase.get(app).usuarioDao()
-        UsuarioRepository(dao)
-    }
+class UsuarioViewModelFactory(private val repo: UsuarioRepository) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
