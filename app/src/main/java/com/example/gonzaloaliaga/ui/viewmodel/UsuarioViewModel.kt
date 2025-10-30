@@ -1,7 +1,9 @@
-package com.example.gonzaloaliaga.data.users
+package com.example.gonzaloaliaga.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gonzaloaliaga.data.users.UserFormState
+import com.example.gonzaloaliaga.data.repository.UsuarioRepository
 import com.example.gonzaloaliaga.model.Usuario
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +16,7 @@ import kotlinx.coroutines.launch
 class UsuarioViewModel(private val repo: UsuarioRepository): ViewModel() {
 
     val usuarios: StateFlow<List<Usuario>> =
-        repo.usuarios.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+        repo.usuarios.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5_000), emptyList())
 
     private val _form = MutableStateFlow(UserFormState())
     val form: StateFlow<UserFormState> = _form.asStateFlow()

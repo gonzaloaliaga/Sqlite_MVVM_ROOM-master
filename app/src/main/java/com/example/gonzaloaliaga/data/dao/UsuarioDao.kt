@@ -1,4 +1,4 @@
-package com.example.gonzaloaliaga.data.users
+package com.example.gonzaloaliaga.data.dao
 
 import androidx.room.*
 import com.example.gonzaloaliaga.model.Usuario

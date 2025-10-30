@@ -29,9 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gonzaloaliaga.data.cart.CarritoViewModel
-import com.example.gonzaloaliaga.data.products.ProductViewModel
-import com.example.gonzaloaliaga.data.users.UsuarioViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
 import com.example.gonzaloaliaga.model.Producto
 
 @OptIn(ExperimentalMaterial3Api::class)

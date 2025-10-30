@@ -1,4 +1,4 @@
-package com.example.gonzaloaliaga.data.products
+package com.example.gonzaloaliaga.data.dao
 
 
 import androidx.room.*
@@ -13,6 +13,9 @@ interface ProductoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(product: Producto): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertarProductosIniciales(productos: List<Producto>)
 
     @Update
     suspend fun update(product: Producto)

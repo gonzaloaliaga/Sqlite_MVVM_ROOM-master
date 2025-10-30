@@ -2,9 +2,9 @@ package com.example.gonzaloaliaga
 
 import android.app.Application
 import com.example.gonzaloaliaga.data.AppDatabase
-import com.example.gonzaloaliaga.data.cart.CarritoRepository
-import com.example.gonzaloaliaga.data.products.ProductRepository
-import com.example.gonzaloaliaga.data.users.UsuarioRepository
+import com.example.gonzaloaliaga.data.repository.CarritoRepository
+import com.example.gonzaloaliaga.data.repository.ProductRepository
+import com.example.gonzaloaliaga.data.repository.UsuarioRepository
 
 class MiApp : Application() {
     val database by lazy { AppDatabase.get(this) }

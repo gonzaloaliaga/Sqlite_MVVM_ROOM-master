@@ -1,6 +1,5 @@
 package com.example.gonzaloaliaga.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gonzaloaliaga.data.products.ProductViewModel
-import com.example.gonzaloaliaga.data.users.UsuarioViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
 
 @Composable
 fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController: NavController) {

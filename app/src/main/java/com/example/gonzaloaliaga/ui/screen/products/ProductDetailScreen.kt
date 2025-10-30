@@ -27,9 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gonzaloaliaga.data.cart.CarritoViewModel
-import com.example.gonzaloaliaga.data.products.ProductViewModel
-import com.example.gonzaloaliaga.data.users.UsuarioViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

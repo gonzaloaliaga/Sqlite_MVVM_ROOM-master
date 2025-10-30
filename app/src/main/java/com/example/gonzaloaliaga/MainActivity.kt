@@ -9,12 +9,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.gonzaloaliaga.data.cart.CarritoViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
 import com.example.gonzaloaliaga.data.cart.CarritoViewModelFactory
-import com.example.gonzaloaliaga.data.products.ProductViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
 import com.example.gonzaloaliaga.data.products.ProductViewModelFactory
-import com.example.gonzaloaliaga.data.users.UsuarioViewModel
+import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
 import com.example.gonzaloaliaga.data.users.UsuarioViewModelFactory
+import com.example.gonzaloaliaga.ui.screen.profile.LoginScreen
+import com.example.gonzaloaliaga.ui.screen.profile.RegisterScreen
 import com.example.gonzaloaliaga.ui.screen.*
 import com.example.gonzaloaliaga.ui.screen.admin.AdminScreen
 import com.example.gonzaloaliaga.ui.screen.admin.ProductManagerScreen

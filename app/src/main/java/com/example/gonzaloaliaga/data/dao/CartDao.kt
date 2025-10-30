@@ -1,5 +1,7 @@
-package com.example.gonzaloaliaga.data.cart
+package com.example.gonzaloaliaga.data.dao
 import androidx.room.*
+import com.example.gonzaloaliaga.data.cart.CarritoConProducto
+import com.example.gonzaloaliaga.data.cart.CartItemEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,5 +1,8 @@
-package com.example.gonzaloaliaga.data.cart
+package com.example.gonzaloaliaga.data.repository
 
+import com.example.gonzaloaliaga.data.cart.CarritoConProducto
+import com.example.gonzaloaliaga.data.cart.CartItemEntity
+import com.example.gonzaloaliaga.data.dao.CartDao
 import kotlinx.coroutines.flow.Flow
 
 class CarritoRepository(private val dao: CartDao) {
