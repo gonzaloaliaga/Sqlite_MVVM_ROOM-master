@@ -41,9 +41,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gonzaloaliaga.model.Producto
-import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
-import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
+import com.example.gonzaloaliaga.data.model.Producto
+import com.example.gonzaloaliaga.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

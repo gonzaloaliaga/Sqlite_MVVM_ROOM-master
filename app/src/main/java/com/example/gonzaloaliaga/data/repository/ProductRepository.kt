@@ -1,6 +1,6 @@
 package com.example.gonzaloaliaga.data.repository
 import com.example.gonzaloaliaga.data.dao.ProductoDao
-import com.example.gonzaloaliaga.model.Producto
+import com.example.gonzaloaliaga.data.model.Producto
 import kotlinx.coroutines.flow.Flow
 
 class ProductRepository(private val dao: ProductoDao) {

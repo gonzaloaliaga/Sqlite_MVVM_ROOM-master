@@ -1,10 +1,10 @@
-package com.example.gonzaloaliaga.ui.viewmodel
+package com.example.gonzaloaliaga.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gonzaloaliaga.data.cart.CarritoConProducto
 import com.example.gonzaloaliaga.data.repository.CarritoRepository
-import com.example.gonzaloaliaga.model.Producto
+import com.example.gonzaloaliaga.data.model.Producto
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

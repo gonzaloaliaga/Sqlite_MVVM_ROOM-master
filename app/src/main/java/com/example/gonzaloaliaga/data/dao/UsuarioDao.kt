@@ -1,7 +1,7 @@
 package com.example.gonzaloaliaga.data.dao
 
 import androidx.room.*
-import com.example.gonzaloaliaga.model.Usuario
+import com.example.gonzaloaliaga.data.model.Usuario
 import kotlinx.coroutines.flow.Flow
 
 @Dao

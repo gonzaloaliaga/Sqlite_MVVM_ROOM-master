@@ -3,8 +3,8 @@ package com.example.gonzaloaliaga.data.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.gonzaloaliaga.data.repository.CarritoRepository
-import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
-import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
+import com.example.gonzaloaliaga.viewmodel.CarritoViewModel
+import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 
 class CarritoViewModelFactory(
     private val repository: CarritoRepository,

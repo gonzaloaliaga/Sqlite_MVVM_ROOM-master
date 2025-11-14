@@ -1,4 +1,4 @@
-package com.example.gonzaloaliaga.model
+package com.example.gonzaloaliaga.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,8 +1,8 @@
 package com.example.gonzaloaliaga.data.cart
 
 import androidx.room.*
-import com.example.gonzaloaliaga.model.Producto
-import com.example.gonzaloaliaga.model.Usuario
+import com.example.gonzaloaliaga.data.model.Producto
+import com.example.gonzaloaliaga.data.model.Usuario
 
 @Entity(
     tableName = "carrito",

@@ -4,16 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
+import com.example.gonzaloaliaga.viewmodel.CarritoViewModel
 import com.example.gonzaloaliaga.data.cart.CarritoViewModelFactory
-import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.viewmodel.ProductViewModel
 import com.example.gonzaloaliaga.data.products.ProductViewModelFactory
-import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
+import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 import com.example.gonzaloaliaga.data.users.UsuarioViewModelFactory
 import com.example.gonzaloaliaga.ui.screen.profile.LoginScreen
 import com.example.gonzaloaliaga.ui.screen.profile.RegisterScreen
@@ -40,10 +42,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
 
             val navController = rememberNavController()
-            NavHost(navController, startDestination = "login") {
+            NavHost(navController, startDestination = "posts") {
 
                 composable("login") {
                     LoginScreen(
@@ -91,6 +94,11 @@ class MainActivity : ComponentActivity() {
 
                 composable("productManager") {
                     ProductManagerScreen(uservm, prodvm, navController)
+                }
+
+                composable("posts") {
+                    val postviewModel: com.example.gonzaloaliaga.data.remote.PostViewModel = viewModel()
+                    PostScreen(postviewModel)
                 }
             }
         }

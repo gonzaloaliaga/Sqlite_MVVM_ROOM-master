@@ -1,10 +1,10 @@
-package com.example.gonzaloaliaga.ui.viewmodel
+package com.example.gonzaloaliaga.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gonzaloaliaga.data.products.ProductFormState
 import com.example.gonzaloaliaga.data.repository.ProductRepository
-import com.example.gonzaloaliaga.model.Producto
+import com.example.gonzaloaliaga.data.model.Producto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
