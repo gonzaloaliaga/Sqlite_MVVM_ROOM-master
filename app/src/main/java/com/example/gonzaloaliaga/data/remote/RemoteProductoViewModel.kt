@@ -2,27 +2,26 @@ package com.example.gonzaloaliaga.data.remote
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gonzaloaliaga.data.remote.Post
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PostViewModel : ViewModel() {
+class RemoteProductoViewModel : ViewModel() {
 
-    private val repository = PostRepository()
+    private val repository = RemoteProductoRepository()
 
-    private val _postList = MutableStateFlow<List<Post>>(emptyList())
+    private val _productList = MutableStateFlow<List<Producto>>(emptyList())
 
-    val postList: StateFlow<List<Post>> = _postList
+    val productList: StateFlow<List<Producto>> = _productList
 
     init {
-        fetchPosts()
+        fetchProducts()
     }
 
-    private fun fetchPosts(){
+    private fun fetchProducts(){
         viewModelScope.launch {
             try {
-                _postList.value = repository.getPosts()
+                _productList.value = repository.getPosts()
             } catch (e: Exception) {
                 println("Error al obtener datos: ${e.localizedMessage}")
             }

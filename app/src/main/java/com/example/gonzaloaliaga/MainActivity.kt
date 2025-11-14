@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val navController = rememberNavController()
-            NavHost(navController, startDestination = "posts") {
+            NavHost(navController, startDestination = "products") {
 
                 composable("login") {
                     LoginScreen(
@@ -96,9 +96,9 @@ class MainActivity : ComponentActivity() {
                     ProductManagerScreen(uservm, prodvm, navController)
                 }
 
-                composable("posts") {
-                    val postviewModel: com.example.gonzaloaliaga.data.remote.PostViewModel = viewModel()
-                    PostScreen(postviewModel)
+                composable("products") {
+                    val remoteProductoViewModel: com.example.gonzaloaliaga.data.remote.RemoteProductoViewModel = viewModel()
+                    ProductScreen(remoteProductoViewModel)
                 }
             }
         }

@@ -20,18 +20,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.gonzaloaliaga.data.remote.PostViewModel
+import com.example.gonzaloaliaga.data.remote.RemoteProductoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(viewModel: PostViewModel) {
+fun ProductScreen(viewModel: RemoteProductoViewModel) {
 
-    val posts = viewModel.postList.collectAsState().value
+    val products = viewModel.productList.collectAsState().value
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Listado de Posts") }
+                title = { Text("Listado de Productos FETCH") }
             )
         }
     ) { innerPadding ->
@@ -44,7 +44,7 @@ fun PostScreen(viewModel: PostViewModel) {
                 .fillMaxSize()
                 .padding(16.dp)
             ) {
-                items(posts) { post ->
+                items(products) { product ->
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
@@ -52,12 +52,15 @@ fun PostScreen(viewModel: PostViewModel) {
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Título: ${post.title}",
+                                text = "Nombre: ${product.nombre}",
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = post.body,
+                                text = "ID: ${product.id}" +
+                                        "\n Precio: ${product.precio}" +
+                                        "\n Categoría: ${product.categoria}" +
+                                        "\n Descripcion: ${product.descripcion}",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
