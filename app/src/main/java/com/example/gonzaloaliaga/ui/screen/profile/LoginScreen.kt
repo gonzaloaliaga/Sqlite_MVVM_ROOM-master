@@ -45,17 +45,17 @@ fun LoginScreen(uservm: UsuarioViewModel, navController: NavController, onLoginS
         ) {
 
             TextField(
-                value = form.nombre,
-                onValueChange = { uservm.onNombreChange(it) },
-                label = { Text("Nombre") },
+                value = form.correo,
+                onValueChange = { uservm.onCorreoChange(it) },
+                label = { Text("Correo electrónico") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             TextField(
-                value = form.password,
-                onValueChange = { uservm.onPasswordChange(it) },
+                value = form.pass,
+                onValueChange = { uservm.onPassChange(it) },
                 label = { Text("Contraseña") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()

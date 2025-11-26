@@ -1,39 +1,34 @@
 package com.example.gonzaloaliaga.data.repository
 
-import com.example.gonzaloaliaga.data.dao.UsuarioDao
+import com.example.gonzaloaliaga.data.api.UserApi
 import com.example.gonzaloaliaga.model.Usuario
-import kotlinx.coroutines.flow.Flow
 
-class UsuarioRepository(private val dao: UsuarioDao) {
-
-    val usuarios: Flow<List<Usuario>> = dao.getAll()
-
-    suspend fun agregar(nombre: String, password: String, rol: String) {
-        require(nombre.isNotBlank()) { "El nombre no puede estar vacío" }
+class UsuarioRepository(private val api: UserApi) {
+    suspend fun login(correo: String, password: String): Usuario {
+        require(correo.isNotBlank()) { "El correo no puede estar vacío" }
         require(password.isNotBlank()) { "La contraseña no puede estar vacía" }
-        require(rol.isNotBlank()) { "El rol no puede estar vacío" }
 
-        val exist = dao.findByNombre(nombre)
-        require(exist == null) { "Ya existe un usuario con este nombre" }
-
-        dao.insert(Usuario(nombre = nombre.trim(), password = password, rol = rol.trim()))
+        return api.login(correo, password)
     }
 
-    suspend fun actualizar(id: Long, nombre: String, password: String, rol: String) {
-        require(id > 0) { "Id inválido" }
-        require(nombre.isNotBlank()) { "El nombre no puede estar vacío" }
-        require(password.isNotBlank()) { "La contraseña no puede estar vacía" }
-        require(rol.isNotBlank()) { "El rol no puede estar vacío" }
-
-        dao.update(Usuario(id = id, nombre = nombre.trim(), password = password, rol = rol.trim()))
+    suspend fun registrar(usuario: Usuario): Usuario {
+        return api.createUser(usuario)
     }
 
-    suspend fun eliminar(usuario: Usuario) = dao.delete(usuario)
-    suspend fun obtener(id: Long) = dao.findById(id)
-    suspend fun obtenerPorNombre(nombre: String) = dao.findByNombre(nombre)
-    suspend fun obtenerPorRol(rol: String) = dao.findByRol(rol)
-    suspend fun login(nombre: String, password: String): Usuario? {
-        val usuario = dao.findByNombre(nombre)
-        return if (usuario != null && usuario.password == password) usuario else null
+    suspend fun obtenerTodos(): List<Usuario> {
+        return api.getAllUsers()._embedded?.usuarioList ?: emptyList()
     }
+
+    suspend fun obtenerPorId(id: String): Usuario {
+        return api.getUserById(id)
+    }
+
+    suspend fun actualizar(id: String, usuario: Usuario): Usuario {
+        return api.updateUser(id, usuario)
+    }
+
+    suspend fun eliminar(id: String) {
+        api.deleteUser(id)
+    }
+
 }

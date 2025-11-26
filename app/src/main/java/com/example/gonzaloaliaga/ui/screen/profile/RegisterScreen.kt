@@ -38,17 +38,17 @@ fun RegisterScreen(
         ) {
 
             TextField(
-                value = form.nombre,
-                onValueChange = { uservm.onNombreChange(it) },
-                label = { Text("Nombre de usuario") },
+                value = form.correo,
+                onValueChange = { uservm.onCorreoChange(it) },
+                label = { Text("Correo electrónico") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             TextField(
-                value = form.password,
-                onValueChange = { uservm.onPasswordChange(it) },
+                value = form.pass,
+                onValueChange = { uservm.onPassChange(it) },
                 label = { Text("Contraseña") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
@@ -76,7 +76,7 @@ fun RegisterScreen(
             val context = LocalContext.current
             Button(
                 onClick = {
-                    uservm.guardar {
+                    uservm.registrar {
                         // Si el registro fue exitoso, vuelve al login
                         Toast.makeText(context, "¡Usuario registrado! Inicia sesión para ingresar a la aplicación.", Toast.LENGTH_SHORT).show()
                         uservm.limpiarError()

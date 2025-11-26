@@ -1,6 +1,5 @@
 package com.example.gonzaloaliaga.ui.screen.products
 
-import com.example.gonzaloaliaga.ui.components.ProductCard
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,20 +14,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.gonzaloaliaga.ui.components.ProductCard
 import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
 import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
 import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, cartvm: CarritoViewModel, navController: NavController) {
-    val user by uservm.currentUser.collectAsState()
+fun CatalogScreen(
+    uservm: UsuarioViewModel,
+    prodvm: ProductViewModel,
+    cartvm: CarritoViewModel,
+    navController: NavController
+) {
     val productos by prodvm.productos.collectAsState()
     val productosPorCategoria = productos.groupBy { it.categoria }
 
@@ -38,14 +40,15 @@ fun CatalogScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, cartvm: Ca
                 title = { Text("Catálogo de productos") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("home") }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver al menú")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver")
                     }
                 }
             )
         }
     ) { padding ->
 
-        LazyColumn(modifier = Modifier.padding(padding).padding(16.dp)) {
+        LazyColumn(Modifier.padding(padding).padding(16.dp)) {
+
             productosPorCategoria.forEach { (categoria, lista) ->
                 item {
                     Text(
@@ -57,10 +60,9 @@ fun CatalogScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, cartvm: Ca
 
                 items(lista) { producto ->
                     ProductCard(producto, cartvm, navController)
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(Modifier.height(8.dp))
                 }
             }
         }
-
     }
 }

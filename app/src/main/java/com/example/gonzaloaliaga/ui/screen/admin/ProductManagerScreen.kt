@@ -140,6 +140,12 @@ fun CrearProductoSection(prodvm: ProductViewModel) {
             onValueChange = { prodvm.onCategoriaChange(it) },
             label = { Text("Categoría") }
         )
+        TextField(
+                value = form.img,
+        onValueChange = { prodvm.onImgChange(it) },
+        label = { Text("URL foto Imgur") }
+        )
+
 
         // Mostrar error directamente desde el ViewModel
         form.error?.let {
@@ -204,6 +210,11 @@ fun ModificarProductoSection(prodvm: ProductViewModel, productos: List<Producto>
                 value = form.categoria,
                 onValueChange = { prodvm.onCategoriaChange(it) },
                 label = { Text("Categoría") }
+            )
+            TextField(
+                value = form.img,
+                onValueChange = { prodvm.onImgChange(it) },
+                label = { Text("URL foto Imgur") }
             )
             form.error?.let {
                 Spacer(Modifier.height(8.dp))

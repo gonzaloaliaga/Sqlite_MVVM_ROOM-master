@@ -12,9 +12,9 @@ import androidx.navigation.navArgument
 import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
 import com.example.gonzaloaliaga.data.cart.CarritoViewModelFactory
 import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
-import com.example.gonzaloaliaga.data.products.ProductViewModelFactory
+import com.example.gonzaloaliaga.data.factory.ProductViewModelFactory
 import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
-import com.example.gonzaloaliaga.data.users.UsuarioViewModelFactory
+import com.example.gonzaloaliaga.data.factory.UsuarioViewModelFactory
 import com.example.gonzaloaliaga.ui.screen.profile.LoginScreen
 import com.example.gonzaloaliaga.ui.screen.profile.RegisterScreen
 import com.example.gonzaloaliaga.ui.screen.*
@@ -26,6 +26,8 @@ import com.example.gonzaloaliaga.ui.screen.products.ProductDetailScreen
 class MainActivity : ComponentActivity() {
     private val app by lazy { application as MiApp }
 
+
+    // PENDIENTE ----------------------------------------
     private val uservm: UsuarioViewModel by viewModels {
         UsuarioViewModelFactory(app.usuarioRepository)
     }
@@ -37,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private val cartvm: CarritoViewModel by viewModels {
         CarritoViewModelFactory(app.carritoRepository, uservm)
     }
+    // ----------------------------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,12 +72,9 @@ class MainActivity : ComponentActivity() {
                     CatalogScreen(uservm, prodvm, cartvm, navController)
                 }
 
-                composable(
-                    "productDetail/{productId}",
-                    listOf(navArgument("productId") {type = NavType.LongType })
-                ) { backStackEntry ->
-                    val productId = backStackEntry.arguments?.getLong("productId") ?: 0L
-                    ProductDetailScreen(uservm, prodvm, cartvm, navController, productId)
+                composable("productDetail/{id}") {
+                    val id = it.arguments?.getString("id")!!
+                    ProductDetailScreen(uservm, prodvm, cartvm, navController, id)
                 }
 
                 composable("cart") {

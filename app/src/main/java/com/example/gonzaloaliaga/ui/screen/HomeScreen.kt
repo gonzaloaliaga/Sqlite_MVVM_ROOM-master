@@ -40,7 +40,7 @@ fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "¡Bienvenido, ${user?.nombre ?: "Usuario"}!",
+                text = "¡Bienvenido/a!",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 16.dp, bottom = 24.dp)
@@ -72,7 +72,7 @@ fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController
                         modifier = Modifier.fillMaxWidth(),
                     ) { Text("Sobre nosotros") }
 
-                    if (user?.rol == "admin") {
+                    if (user?.rol?.lowercase() == "admin") {
                         Button(
                             onClick = { navController.navigate("adminScreen") },
                             modifier = Modifier.fillMaxWidth(),

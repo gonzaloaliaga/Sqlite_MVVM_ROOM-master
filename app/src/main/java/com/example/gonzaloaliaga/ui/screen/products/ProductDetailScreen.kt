@@ -38,7 +38,7 @@ fun ProductDetailScreen(
     prodvm: ProductViewModel,
     cartvm: CarritoViewModel,
     navController: NavController,
-    productId: Long
+    productId: String   // ← AHORA STRING
 ) {
     val productos by prodvm.productos.collectAsState()
     val producto = productos.find { it.id == productId }
@@ -49,34 +49,48 @@ fun ProductDetailScreen(
                 title = { Text(producto?.nombre ?: "Producto no encontrado") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("catalog") }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver al catálogo")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver")
                     }
                 }
             )
         }
     ) { padding ->
-        producto?.let {
+
+        producto?.let { p ->
             Column(
                 modifier = Modifier
                     .padding(padding)
                     .padding(16.dp)
+                    .fillMaxSize()
             ) {
-                Text(it.nombre, style = MaterialTheme.typography.titleLarge)
+
+                // Imagen
+                androidx.compose.foundation.Image(
+                    painter = coil.compose.rememberAsyncImagePainter(p.img),
+                    contentDescription = p.nombre,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+
+                Spacer(Modifier.height(16.dp))
+                Text(p.nombre, style = MaterialTheme.typography.titleLarge)
                 Spacer(Modifier.height(8.dp))
-                Text("Precio: $${it.precio}", style = MaterialTheme.typography.titleMedium)
+                Text("Precio: $${p.precio}", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
-                Text("Categoría: ${it.categoria}", style = MaterialTheme.typography.bodyMedium)
+                Text("Categoría: ${p.categoria}")
                 Spacer(Modifier.height(8.dp))
-                Text(it.descripcion, style = MaterialTheme.typography.bodySmall)
+                Text(p.descripcion)
                 Spacer(Modifier.height(16.dp))
 
                 val context = LocalContext.current
+
                 Button(
                     onClick = {
-                        cartvm.agregar(it)
+                        cartvm.agregar(p)
                         Toast.makeText(
                             context,
-                            "${it.nombre} agregado al carrito",
+                            "${p.nombre} agregado al carrito",
                             Toast.LENGTH_SHORT
                         ).show()
                     },
@@ -85,15 +99,11 @@ fun ProductDetailScreen(
                     Text("Agregar al carrito")
                 }
             }
-        } ?: run {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Producto no encontrado", color = Color.Gray)
-            }
+        } ?: Box(
+            Modifier.fillMaxSize().padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Producto no encontrado", color = Color.Gray)
         }
     }
 }

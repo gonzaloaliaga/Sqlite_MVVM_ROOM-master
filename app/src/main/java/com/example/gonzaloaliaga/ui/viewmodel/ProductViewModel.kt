@@ -2,7 +2,7 @@ package com.example.gonzaloaliaga.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gonzaloaliaga.data.products.ProductFormState
+import com.example.gonzaloaliaga.data.formstate.ProductFormState
 import com.example.gonzaloaliaga.data.repository.ProductRepository
 import com.example.gonzaloaliaga.model.Producto
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,12 +13,21 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProductViewModel(private val repo: ProductRepository): ViewModel() {
+class ProductViewModel(private val repo: ProductRepository) : ViewModel() {
 
-    // Lista observable desde la UI
+    // -----------------------------
+    // LISTA DE PRODUCTOS (Flow del repo)
+    // -----------------------------
     val productos: StateFlow<List<Producto>> =
-        repo.productos.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5_000), emptyList())
+        repo.productos.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            emptyList()
+        )
 
+    // -----------------------------
+    // FORMULARIO
+    // -----------------------------
     private val _form = MutableStateFlow(ProductFormState())
     val form: StateFlow<ProductFormState> = _form.asStateFlow()
 
@@ -31,39 +40,69 @@ class ProductViewModel(private val repo: ProductRepository): ViewModel() {
                 nombre = product.nombre,
                 precio = product.precio,
                 descripcion = product.descripcion,
-                categoria = product.categoria
+                categoria = product.categoria,
+                img = product.img
             )
         }
     }
 
-    fun onNombreChange(v: String) { _form.update { it.copy(nombre = v) } }
-    fun onPrecioChange(v: Double) { _form.update { it.copy(precio = v) } }
+    fun onNombreChange(v: String)        { _form.update { it.copy(nombre = v) } }
+    fun onPrecioChange(v: Double)        { _form.update { it.copy(precio = v) } }
+    fun onDescripcionChange(v: String)    { _form.update { it.copy(descripcion = v) } }
+    fun onCategoriaChange(v: String)      { _form.update { it.copy(categoria = v) } }
+    fun onImgChange(v: String)            { _form.update { it.copy(img = v) } }
+    fun limpiarError()                    { _form.update { it.copy(error = null) } }
 
-    fun onDescripcionChange(v: String) { _form.update { it.copy(descripcion = v) } }
-
-    fun onCategoriaChange(v: String) { _form.update { it.copy(categoria = v) } }
-    fun limpiarError() { _form.update { it.copy(error = null) } }
-
-    fun guardar(oAlFinal: () -> Unit = {}) = viewModelScope.launch {
+    // -----------------------------
+    // GUARDAR (CREAR O EDITAR)
+    // -----------------------------
+    fun guardar(onSuccess: () -> Unit = {}) = viewModelScope.launch {
         try {
             val f = _form.value
+
             val precio = f.precio ?: throw IllegalArgumentException("Precio inválido")
+            val nombre = f.nombre.trim()
             val descripcion = f.descripcion
             val categoria = f.categoria
+            val img = f.img
 
             if (f.id == null) {
-                repo.agregar(f.nombre, precio, descripcion, categoria)
+                // CREAR
+                repo.agregar(
+                    nombre = nombre,
+                    precio = precio,
+                    descripcion = descripcion,
+                    categoria = categoria,
+                    img = img
+                )
             } else {
-                repo.actualizar(f.id, f.nombre, precio, descripcion, categoria)
+                // ACTUALIZAR
+                repo.actualizar(
+                    id = f.id,
+                    nombre = nombre,
+                    precio = precio,
+                    descripcion = descripcion,
+                    categoria = categoria,
+                    img = img
+                )
             }
+
             editar(null)
-            oAlFinal()
+            onSuccess()
+
         } catch (e: Exception) {
             _form.update { it.copy(error = e.message ?: "Error desconocido") }
         }
     }
 
+    // -----------------------------
+    // ELIMINAR
+    // -----------------------------
     fun eliminar(product: Producto) = viewModelScope.launch {
-        repo.eliminar(product)
+        try {
+            product.id?.let { repo.eliminar(it) }
+        } catch (e: Exception) {
+            _form.update { it.copy(error = e.message ?: "Error desconocido") }
+        }
     }
 }

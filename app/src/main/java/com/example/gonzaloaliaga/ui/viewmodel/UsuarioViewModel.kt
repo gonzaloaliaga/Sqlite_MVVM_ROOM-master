@@ -2,77 +2,82 @@ package com.example.gonzaloaliaga.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gonzaloaliaga.data.users.UserFormState
+import com.example.gonzaloaliaga.data.formstate.UserFormState
 import com.example.gonzaloaliaga.data.repository.UsuarioRepository
 import com.example.gonzaloaliaga.model.Usuario
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class UsuarioViewModel(private val repo: UsuarioRepository): ViewModel() {
+class UsuarioViewModel(private val repo: UsuarioRepository) : ViewModel() {
 
-    val usuarios: StateFlow<List<Usuario>> =
-        repo.usuarios.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5_000), emptyList())
-
+    // Estado del formulario
     private val _form = MutableStateFlow(UserFormState())
     val form: StateFlow<UserFormState> = _form.asStateFlow()
 
-    fun editar(usuario: Usuario?) {
-        _form.value = if (usuario == null) {
-            UserFormState()
-        } else {
-            UserFormState(
-                id = usuario.id,
-                nombre = usuario.nombre,
-                password = usuario.password,
-                rol = usuario.rol
-            )
-        }
-    }
-
-    fun onNombreChange(v: String) { _form.update { it.copy(nombre = v) } }
-    fun onPasswordChange(v: String) { _form.update { it.copy(password = v) } }
-    fun onRolChange(v: String) { _form.update { it.copy(rol = v) } }
-    fun limpiarError() { _form.update { it.copy(error = null) } }
-
-    fun guardar(oAlFinal: () -> Unit = {}) = viewModelScope.launch {
-        try {
-            val f = _form.value
-            if (f.id == null) {
-                repo.agregar(f.nombre, f.password, f.rol)
-            } else {
-                repo.actualizar(f.id, f.nombre, f.password, f.rol)
-            }
-            editar(null)
-            oAlFinal()
-        } catch (e: Exception) {
-            _form.update { it.copy(error = e.message ?: "Error desconocido") }
-        }
-    }
-
-    fun eliminar(usuario: Usuario) = viewModelScope.launch {
-        repo.eliminar(usuario)
-    }
-
+    // Usuario actualmente logueado
     private val _currentUser = MutableStateFlow<Usuario?>(null)
     val currentUser: StateFlow<Usuario?> = _currentUser.asStateFlow()
+
+    // ---------------------
+    // FORMULARIO
+    // ---------------------
+
+    fun onCorreoChange(v: String)   { _form.update { it.copy(correo = v) } }
+    fun onPassChange(v: String)     { _form.update { it.copy(pass = v) } }
+    fun onRolChange(v: String)      { _form.update { it.copy(rol = v) } }
+    fun limpiarError()              { _form.update { it.copy(error = null) } }
+
+    // ---------------------
+    // LOGIN
+    // ---------------------
 
     fun login(onSuccess: () -> Unit = {}) = viewModelScope.launch {
         try {
             val f = _form.value
-            val usuario = repo.login(f.nombre.trim(), f.password)
-                ?: throw IllegalArgumentException("Usuario o contraseña inválidos")
+
+            val usuario = repo.login(
+                correo = f.correo.trim(),
+                password = f.pass.trim()
+            )
+
             _currentUser.value = usuario
-            _form.update { UserFormState() }
+            _form.value = UserFormState()
+
             onSuccess()
+
         } catch (e: Exception) {
             _form.update { it.copy(error = e.message ?: "Error desconocido") }
         }
     }
 
-    fun logout() { _currentUser.value = null }
+    fun logout() {
+        _currentUser.value = null
+    }
+
+    // ---------------------
+    // REGISTRO
+    // ---------------------
+
+    fun registrar(onSuccess: () -> Unit = {}) = viewModelScope.launch {
+        try {
+            val f = _form.value
+
+            val nuevo = Usuario(
+                correo = f.correo.trim(),
+                pass = f.pass.trim(),
+                rol = f.rol.trim()
+            )
+
+            repo.registrar(nuevo)
+
+            _form.value = UserFormState()
+            onSuccess()
+
+        } catch (e: Exception) {
+            _form.update { it.copy(error = e.message ?: "Error desconocido") }
+        }
+    }
 }
