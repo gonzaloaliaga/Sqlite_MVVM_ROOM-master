@@ -1,4 +1,4 @@
-package com.example.gonzaloaliaga.model
+package com.example.gonzaloaliaga.data.model
 
 data class Producto (
     val id: String? = null,

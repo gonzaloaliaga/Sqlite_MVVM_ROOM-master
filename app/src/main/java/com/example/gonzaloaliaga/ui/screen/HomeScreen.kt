@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
-import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
+import com.example.gonzaloaliaga.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 
 @Composable
 fun HomeScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController: NavController) {

@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
-import com.example.gonzaloaliaga.model.Producto
+import com.example.gonzaloaliaga.viewmodel.CarritoViewModel
+import com.example.gonzaloaliaga.data.model.Producto
 
 @Composable
 fun ProductCard(

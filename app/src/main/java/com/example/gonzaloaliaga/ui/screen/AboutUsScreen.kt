@@ -23,8 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gonzaloaliaga.R
-import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
-import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
+import com.example.gonzaloaliaga.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,10 +1,10 @@
-package com.example.gonzaloaliaga.ui.viewmodel
+package com.example.gonzaloaliaga.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gonzaloaliaga.data.formstate.UserFormState
 import com.example.gonzaloaliaga.data.repository.UsuarioRepository
-import com.example.gonzaloaliaga.model.Usuario
+import com.example.gonzaloaliaga.data.model.Usuario
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
