@@ -78,7 +78,7 @@ fun RegisterScreen(
                 onClick = {
                     uservm.verificarCorreoAntesDeRegistrar(
                         correo = form.correo,
-                        onCorreoValido = { uservm.registrar {                             // Si el registro fue exitoso, vuelve al login
+                        onCorreoValido = { uservm.registrar {  // Si el registro fue exitoso, vuelve al login
                             Toast.makeText(context, "¡Usuario registrado! Inicia sesión para ingresar a la aplicación.", Toast.LENGTH_SHORT).show()
                             uservm.limpiarError()
                             navController.popBackStack()
