@@ -23,4 +23,10 @@ class CarritoRepository(
     suspend fun vaciarCarrito(usuarioId: String) {
         api.vaciarCarrito(usuarioId)
     }
+
+    suspend fun eliminarItemCompletamente(usuarioId: String, productoId: String, cantidad: Int) {
+        repeat(cantidad) {
+            api.removeItem(usuarioId, productoId) // RESTA 1 cada vez. El backend elimina el item si cantidad llega a 0
+        }
+    }
 }

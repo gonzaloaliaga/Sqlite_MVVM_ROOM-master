@@ -2,6 +2,7 @@ package com.example.gonzaloaliaga.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gonzaloaliaga.data.model.Producto
 import com.example.gonzaloaliaga.data.repository.CarritoRepository
 import com.example.gonzaloaliaga.model.Carrito
 import com.example.gonzaloaliaga.model.CarritoItem
@@ -83,5 +84,41 @@ class CarritoViewModel(
             repo.vaciarCarrito(user.id!!)
             _carrito.value = Carrito(usuarioId = user.id!!, items = emptyList())
         } catch (_: Exception) { }
+    }
+
+    fun eliminarCompletamente(productoId: String) = viewModelScope.launch {
+        val user = uservm.currentUser.value ?: return@launch
+
+        val carritoActual = _carrito.value ?: return@launch
+        val item = carritoActual.items.find { it.productoId == productoId } ?: return@launch
+
+        try {
+            repo.eliminarItemCompletamente(user.id!!, productoId, item.cantidad)
+            _carrito.value = repo.obtenerCarrito(user.id!!)
+        } catch (_: Exception) { }
+    }
+
+    private val _limpiando = MutableStateFlow(false)
+    val limpiando = _limpiando.asStateFlow()
+
+    // LIMPIAR CARRITO CON ITEMS FANTASMA
+    fun limpiarItemsNoExistentes(productosDisponibles: List<Producto>) = viewModelScope.launch {
+        val user = uservm.currentUser.value ?: return@launch
+        _limpiando.value = true
+
+        val carritoActual = repo.obtenerCarrito(user.id!!)
+
+        carritoActual.items.forEach { item ->
+            val existe = productosDisponibles.any { it.id == item.productoId }
+            if (!existe) {
+                try {
+                    repo.eliminarItemCompletamente(user.id!!, item.productoId, item.cantidad)
+                } catch (_: Exception) { }
+            }
+        }
+
+        // Recargar carrito actualizado
+        _carrito.value = repo.obtenerCarrito(user.id!!)
+        _limpiando.value = false
     }
 }

@@ -27,14 +27,21 @@ fun ShoppingCartScreen(
 ) {
     val carrito by cartvm.carrito.collectAsState()
     val productos by prodvm.productos.collectAsState()
+    val limpiando by cartvm.limpiando.collectAsState()
 
-    if (carrito == null) {
+    LaunchedEffect(productos) {
+        cartvm.limpiarItemsNoExistentes(productos)
+    }
+
+    if (limpiando) {
         Scaffold { padding ->
             Box(
-                modifier = Modifier.padding(padding).fillMaxSize(),
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Cargando carrito...")
+                Text("Actualizando carrito...")
             }
         }
         return
@@ -55,14 +62,30 @@ fun ShoppingCartScreen(
 
         Column(modifier = Modifier.padding(padding).padding(16.dp)) {
 
-            if (carrito!!.items.isEmpty()) {
+            val carritoActual = carrito
+
+            if (carritoActual == null) {
+                Scaffold { padding ->
+                    Box(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Cargando carrito...")
+                    }
+                }
+                return@Column
+            }
+
+            if (carritoActual.items.isEmpty()) {
                 Text("Tu carrito está vacío.")
                 return@Column
             }
 
             LazyColumn {
 
-                items(carrito!!.items) { itemCarrito ->
+                items(carritoActual.items) { itemCarrito ->
 
                     val producto = productos.find { it.id == itemCarrito.productoId }
 
@@ -116,7 +139,7 @@ fun ShoppingCartScreen(
                                 }
 
                                 IconButton(
-                                    onClick = { cartvm.disminuir(producto.id!!) }
+                                    onClick = { cartvm.eliminarCompletamente(producto.id!!) }
                                 ) {
                                     Icon(Icons.Default.Delete, "Eliminar")
                                 }
@@ -128,7 +151,7 @@ fun ShoppingCartScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            val total = carrito!!.items.sumOf { item ->
+            val total = carritoActual.items.sumOf { item ->
                 val p = productos.find { it.id == item.productoId }
                 if (p != null) p.precio * item.cantidad else 0.0
             }

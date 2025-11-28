@@ -158,9 +158,12 @@ fun CrearProductoSection(prodvm: ProductViewModel) {
 
         val context = LocalContext.current
         Button(onClick = {
-            prodvm.guardar()
-            Toast.makeText(context, "Producto agregado", Toast.LENGTH_SHORT).show()
-        }) {
+            prodvm.guardar{
+                prodvm.refrescarDesdeUI()
+                Toast.makeText(context, "Producto agregado", Toast.LENGTH_SHORT).show()
+            }
+        }
+        ) {
             Text("Guardar Producto")
         }
     }
@@ -238,7 +241,14 @@ fun ModificarProductoSection(prodvm: ProductViewModel, productos: List<Producto>
 
                 Spacer(Modifier.height(8.dp))
 
-                Button(onClick = { prodvm.guardar() }) {
+                val context = LocalContext.current
+                Button(onClick = {
+                    prodvm.guardar{
+                        prodvm.refrescarDesdeUI()
+                        Toast.makeText(context, "Producto actualizado", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                ) {
                     Text("Actualizar")
                 }
             }
