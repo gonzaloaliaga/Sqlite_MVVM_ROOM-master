@@ -25,10 +25,16 @@ class UsuarioViewModel(private val repo: UsuarioRepository) : ViewModel() {
     // FORMULARIO
     // ---------------------
 
-    fun onCorreoChange(v: String)   { _form.update { it.copy(correo = v) } }
+    fun onCorreoChange(v: String) {
+        _form.update { it.copy(correo = v, error = null) }
+    }
     fun onPassChange(v: String)     { _form.update { it.copy(pass = v) } }
     fun onRolChange(v: String)      { _form.update { it.copy(rol = v) } }
     fun limpiarError()              { _form.update { it.copy(error = null) } }
+
+    fun setError(msg: String) {
+        _form.update { it.copy(error = msg) }
+    }
 
     // ---------------------
     // LOGIN
@@ -78,6 +84,28 @@ class UsuarioViewModel(private val repo: UsuarioRepository) : ViewModel() {
 
         } catch (e: Exception) {
             _form.update { it.copy(error = e.message ?: "Error desconocido") }
+        }
+    }
+
+    fun verificarCorreoAntesDeRegistrar(
+        correo: String,
+        onCorreoValido: () -> Unit,
+        onCorreoDuplicado: () -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val usuarios = repo.obtenerTodos() // GET /api/usuarios
+                val existe = usuarios.any { it.correo.equals(correo, ignoreCase = true) }
+
+                if (existe) {
+                    onCorreoDuplicado()
+                } else {
+                    onCorreoValido()
+                }
+
+            } catch (e: Exception) {
+                onCorreoValido() // si falla la API, no bloqueamos registro
+            }
         }
     }
 }

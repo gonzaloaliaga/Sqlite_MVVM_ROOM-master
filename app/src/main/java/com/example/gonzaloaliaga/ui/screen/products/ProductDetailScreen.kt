@@ -40,13 +40,19 @@ fun ProductDetailScreen(
     navController: NavController,
     productId: String
 ) {
-    val productos by prodvm.productos.collectAsState()
-    val producto = productos.find { it.id == productId }
+
+    // Cargar producto al entrar
+    androidx.compose.runtime.LaunchedEffect(productId) {
+        prodvm.cargarProducto(productId)
+    }
+
+    // Observar el flujo del producto
+    val producto by prodvm.productoSeleccionado.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(producto?.nombre ?: "Producto no encontrado") },
+                title = { Text(producto?.nombre ?: "Cargando...") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("catalog") }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver")
@@ -56,54 +62,59 @@ fun ProductDetailScreen(
         }
     ) { padding ->
 
-        producto?.let { p ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(16.dp)
-                    .fillMaxSize()
+        when (val p = producto) {
+
+            null -> Box(
+                Modifier.fillMaxSize().padding(padding),
+                contentAlignment = Alignment.Center
             ) {
+                Text("Cargando producto...", color = Color.Gray)
+            }
 
-                // Imagen
-                androidx.compose.foundation.Image(
-                    painter = coil.compose.rememberAsyncImagePainter(p.img),
-                    contentDescription = p.nombre,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                )
-
-                Spacer(Modifier.height(16.dp))
-                Text(p.nombre, style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.height(8.dp))
-                Text("Precio: $${p.precio}", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                Text("Categoría: ${p.categoria}")
-                Spacer(Modifier.height(8.dp))
-                Text(p.descripcion)
-                Spacer(Modifier.height(16.dp))
-
+            else -> {
                 val context = LocalContext.current
 
-                Button(
-                    onClick = {
-                        cartvm.agregar(p)
-                        Toast.makeText(
-                            context,
-                            "${p.nombre} agregado al carrito",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                        .padding(16.dp)
+                        .fillMaxSize()
                 ) {
-                    Text("Agregar al carrito")
+
+                    // Imagen
+                    androidx.compose.foundation.Image(
+                        painter = coil.compose.rememberAsyncImagePainter(p.img),
+                        contentDescription = p.nombre,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+                    Text(p.nombre, style = MaterialTheme.typography.titleLarge)
+                    Spacer(Modifier.height(8.dp))
+                    Text("Precio: $${p.precio}", style = MaterialTheme.typography.titleMedium)
+                    Spacer(Modifier.height(8.dp))
+                    Text("Categoría: ${p.categoria}")
+                    Spacer(Modifier.height(8.dp))
+                    Text(p.descripcion)
+                    Spacer(Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            cartvm.agregar(productId)
+                            Toast.makeText(
+                                context,
+                                "${p.nombre} agregado al carrito",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Agregar al carrito")
+                    }
                 }
             }
-        } ?: Box(
-            Modifier.fillMaxSize().padding(padding),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Producto no encontrado", color = Color.Gray)
         }
     }
 }

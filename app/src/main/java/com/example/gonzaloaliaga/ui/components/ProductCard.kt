@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.gonzaloaliaga.viewmodel.CarritoViewModel
 import com.example.gonzaloaliaga.data.model.Producto
 
@@ -30,6 +31,7 @@ fun ProductCard(
             .clickable { navController.navigate("productDetail/${producto.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -37,13 +39,12 @@ fun ProductCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // 👉 Imagen del producto
-            androidx.compose.foundation.Image(
-                painter = coil.compose.rememberAsyncImagePainter(producto.img),
+            // 👉 Imagen con Coil moderno
+            AsyncImage(
+                model = producto.img,
                 contentDescription = producto.nombre,
                 modifier = Modifier
-                    .weight(0.4f)
-                    .height(90.dp)
+                    .size(90.dp)          // Tamaño fijo, no deformable
                     .padding(8.dp)
             )
 
@@ -54,17 +55,19 @@ fun ProductCard(
             ) {
                 Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
                 Text("$${producto.precio}", style = MaterialTheme.typography.bodyMedium)
+
                 Text(
                     producto.descripcion,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    maxLines = 2
                 )
             }
 
             val context = LocalContext.current
             Button(
                 onClick = {
-                    cartvm.agregar(producto)
+                    cartvm.agregar(producto.id!!) // 👈 tu método agrega por id
                     Toast.makeText(
                         context,
                         "${producto.nombre} agregado al carrito",

@@ -1,16 +1,23 @@
 package com.example.gonzaloaliaga.data.repository
 
 import com.example.gonzaloaliaga.data.api.ProductApi
-import com.example.gonzaloaliaga.model.Producto
+import com.example.gonzaloaliaga.data.model.Producto
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 
 class ProductRepository(private val api: ProductApi) {
 
     // Obtener TODOS los productos (manejo de HATEOAS)
-    val productos: Flow<List<Producto>> = flow {
-        val response = api.getAll()
-        emit(response._embedded?.productoList ?: emptyList())
+    private val _productos = MutableStateFlow<List<Producto>>(emptyList())
+    val productos: StateFlow<List<Producto>> = _productos
+
+    // --- Obtener todos los productos desde la API ---
+    suspend fun refrescar() {
+        val resp = api.getAll()
+        val lista = resp._embedded?.productoList ?: emptyList()
+        _productos.value = lista
     }
 
     suspend fun agregar(
@@ -35,6 +42,7 @@ class ProductRepository(private val api: ProductApi) {
             img = img
         )
 
+        refrescar()
         return api.create(nuevo)
     }
 
@@ -63,12 +71,14 @@ class ProductRepository(private val api: ProductApi) {
             img = img
         )
 
+        refrescar()
         return api.update(id, actualizado)
     }
 
     suspend fun eliminar(id: String) {
         require(id.isNotBlank()) { "ID inválido" }
         api.delete(id)
+        refrescar()
     }
 
     suspend fun obtener(id: String): Producto {

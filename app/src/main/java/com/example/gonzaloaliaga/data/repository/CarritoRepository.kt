@@ -1,48 +1,26 @@
 package com.example.gonzaloaliaga.data.repository
 
-import com.example.gonzaloaliaga.data.cart.CarritoConProducto
-import com.example.gonzaloaliaga.data.cart.CartItemEntity
-import com.example.gonzaloaliaga.data.dao.CartDao
-import kotlinx.coroutines.flow.Flow
+import com.example.gonzaloaliaga.data.api.CarritoApi
+import com.example.gonzaloaliaga.model.CarritoItem
+import com.example.gonzaloaliaga.model.Carrito
 
-class CarritoRepository(private val dao: CartDao) {
+class CarritoRepository(
+    private val api: CarritoApi
+) {
 
-    fun obtenerCarrito(usuarioId: Long): Flow<List<CarritoConProducto>> =
-        dao.getCarrito(usuarioId)
-
-    suspend fun agregarAlCarrito(usuarioId: Long, productoId: Long) {
-        val existente = dao.findItem(usuarioId, productoId)
-        if (existente != null) {
-            dao.update(existente.copy(cantidad = existente.cantidad + 1))
-        } else {
-            dao.insert(
-                CartItemEntity(
-                    id = 0,
-                    usuarioId = usuarioId,
-                    productoId = productoId,
-                    cantidad = 1
-                )
-            )
-        }
+    suspend fun obtenerCarrito(usuarioId: String): Carrito {
+        return api.getCarrito(usuarioId)
     }
 
-    suspend fun restarDelCarrito(usuarioId: Long, productoId: Long) {
-        val existente = dao.findItem(usuarioId, productoId)
-        if (existente != null) {
-            if (existente.cantidad > 1) {
-                dao.update(existente.copy(cantidad = existente.cantidad - 1))
-            } else {
-                dao.delete(existente)
-            }
-        }
+    suspend fun agregarItem(usuarioId: String, item: CarritoItem): Carrito {
+        return api.addItem(usuarioId, item)
     }
 
-    suspend fun eliminar(usuarioId: Long, productoId: Long) {
-        val existente = dao.findItem(usuarioId, productoId)
-        if (existente != null) dao.delete(existente)
+    suspend fun disminuirItem(usuarioId: String, productoId: String): Carrito {
+        return api.removeItem(usuarioId, productoId)
     }
 
-    suspend fun vaciar(usuarioId: Long) {
-        dao.limpiarCarrito(usuarioId)
+    suspend fun vaciarCarrito(usuarioId: String) {
+        api.vaciarCarrito(usuarioId)
     }
 }

@@ -1,7 +1,7 @@
 package com.example.gonzaloaliaga.data.repository
 
 import com.example.gonzaloaliaga.data.api.UserApi
-import com.example.gonzaloaliaga.model.Usuario
+import com.example.gonzaloaliaga.data.model.Usuario
 
 class UsuarioRepository(private val api: UserApi) {
     suspend fun login(correo: String, password: String): Usuario {

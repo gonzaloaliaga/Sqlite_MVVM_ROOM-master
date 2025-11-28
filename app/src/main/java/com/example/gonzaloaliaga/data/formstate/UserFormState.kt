@@ -5,5 +5,5 @@ data class UserFormState(
     val correo: String = "",
     val pass: String = "",
     val rol: String = "",
-    val error: String? = null
+    var error: String? = null
 )

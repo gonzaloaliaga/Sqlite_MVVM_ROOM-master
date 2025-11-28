@@ -4,16 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.example.gonzaloaliaga.ui.viewmodel.CarritoViewModel
-import com.example.gonzaloaliaga.data.cart.CarritoViewModelFactory
-import com.example.gonzaloaliaga.ui.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.data.factory.CarritoModelFactory
 import com.example.gonzaloaliaga.data.factory.ProductViewModelFactory
-import com.example.gonzaloaliaga.ui.viewmodel.UsuarioViewModel
 import com.example.gonzaloaliaga.data.factory.UsuarioViewModelFactory
 import com.example.gonzaloaliaga.ui.screen.profile.LoginScreen
 import com.example.gonzaloaliaga.ui.screen.profile.RegisterScreen
@@ -22,12 +17,13 @@ import com.example.gonzaloaliaga.ui.screen.admin.AdminScreen
 import com.example.gonzaloaliaga.ui.screen.admin.ProductManagerScreen
 import com.example.gonzaloaliaga.ui.screen.products.CatalogScreen
 import com.example.gonzaloaliaga.ui.screen.products.ProductDetailScreen
+import com.example.gonzaloaliaga.viewmodel.CarritoViewModel
+import com.example.gonzaloaliaga.viewmodel.ProductViewModel
+import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
     private val app by lazy { application as MiApp }
 
-
-    // PENDIENTE ----------------------------------------
     private val uservm: UsuarioViewModel by viewModels {
         UsuarioViewModelFactory(app.usuarioRepository)
     }
@@ -37,9 +33,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private val cartvm: CarritoViewModel by viewModels {
-        CarritoViewModelFactory(app.carritoRepository, uservm)
+        CarritoModelFactory(app.carritoRepository, uservm)
     }
-    // ----------------------------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +73,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable("cart") {
-                    ShoppingCartScreen(cartvm, navController)
+                    ShoppingCartScreen(cartvm, prodvm, navController)
                 }
 
                 composable("about") {

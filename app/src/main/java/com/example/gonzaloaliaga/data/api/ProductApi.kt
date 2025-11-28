@@ -1,7 +1,7 @@
 package com.example.gonzaloaliaga.data.api
 
-import com.example.gonzaloaliaga.model.Producto
-import com.example.gonzaloaliaga.model.ProductoResponse
+import com.example.gonzaloaliaga.data.model.Producto
+import com.example.gonzaloaliaga.data.model.ProductoResponse
 import retrofit2.http.*
 
 interface ProductApi {

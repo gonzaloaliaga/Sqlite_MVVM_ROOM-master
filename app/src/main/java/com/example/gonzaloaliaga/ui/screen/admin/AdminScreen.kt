@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -24,6 +25,19 @@ import com.example.gonzaloaliaga.viewmodel.UsuarioViewModel
 @Composable
 fun AdminScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navController: NavController) {
     val user by uservm.currentUser.collectAsState()
+
+    // Rederigir a home si el usuario no es admin (por alguna razón)
+    val rol = user?.rol?.lowercase()
+
+    if (rol != "admin") {
+        // Redirigir automáticamente
+        LaunchedEffect(Unit) {
+            navController.navigate("home") {
+                popUpTo("adminScreen") { inclusive = true }
+            }
+        }
+        return
+    }
 
     Scaffold(
         topBar = {

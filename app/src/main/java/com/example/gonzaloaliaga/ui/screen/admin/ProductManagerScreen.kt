@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -169,66 +170,77 @@ fun CrearProductoSection(prodvm: ProductViewModel) {
 @Composable
 fun ModificarProductoSection(prodvm: ProductViewModel, productos: List<Producto>) {
     val form by prodvm.form.collectAsState()
-    Column {
-        LazyColumn {
+
+    Row(Modifier.fillMaxWidth()) {
+
+        // LISTA
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
             items(productos) { producto ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .padding(4.dp)
                         .clickable { prodvm.editar(producto) }
                 ) {
-                    Column(modifier = Modifier.padding(8.dp)) {
-                        Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
-                        Text("Precio: $${producto.precio}")
+                    Column(Modifier.padding(8.dp)) {
+                        Text(producto.nombre)
+                        Text("Precio ${producto.precio}")
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.width(12.dp))
 
-        // Form para editar producto seleccionado
+        // FORMULARIO
         if (form.id != null) {
-            Text("Editar Producto Seleccionado")
-            TextField(
-                value = form.nombre,
-                onValueChange = { prodvm.onNombreChange(it) },
-                label = { Text("Nombre") }
-            )
-            TextField(
-                value = form.precio?.toString() ?: "",
-                onValueChange = { prodvm.onPrecioChange(it.toDoubleOrNull() ?: 0.0) },
-                label = { Text("Precio") }
-            )
-            TextField(
-                value = form.descripcion,
-                onValueChange = { prodvm.onDescripcionChange(it) },
-                label = { Text("Descripción") }
-            )
-            TextField(
-                value = form.categoria,
-                onValueChange = { prodvm.onCategoriaChange(it) },
-                label = { Text("Categoría") }
-            )
-            TextField(
-                value = form.img,
-                onValueChange = { prodvm.onImgChange(it) },
-                label = { Text("URL foto Imgur") }
-            )
-            form.error?.let {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp)
+            ) {
+                Text("Editar producto", style = MaterialTheme.typography.titleMedium)
+
+                TextField(
+                    value = form.nombre,
+                    onValueChange = { prodvm.onNombreChange(it) },
+                    label = { Text("Nombre") }
+                )
+
+                TextField(
+                    value = form.precio?.toString() ?: "",
+                    onValueChange = {
+                        val valor = it.toDoubleOrNull()
+                        if (valor != null) prodvm.onPrecioChange(valor)
+                    },
+                    label = { Text("Precio") }
+                )
+
+                TextField(
+                    value = form.descripcion,
+                    onValueChange = { prodvm.onDescripcionChange(it) },
+                    label = { Text("Descripción") }
+                )
+
+                TextField(
+                    value = form.categoria,
+                    onValueChange = { prodvm.onCategoriaChange(it) },
+                    label = { Text("Categoría") }
+                )
+
+                TextField(
+                    value = form.img,
+                    onValueChange = { prodvm.onImgChange(it) },
+                    label = { Text("URL imagen") }
+                )
+
                 Spacer(Modifier.height(8.dp))
-                Text(it, color = Color.Red)
-            }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            val context = LocalContext.current
-            Button(onClick = {
-                prodvm.guardar()
-                Toast.makeText(context, "Producto actualizado", Toast.LENGTH_SHORT).show()
-            }) {
-                Text("Actualizar Producto")
+                Button(onClick = { prodvm.guardar() }) {
+                    Text("Actualizar")
+                }
             }
         }
     }

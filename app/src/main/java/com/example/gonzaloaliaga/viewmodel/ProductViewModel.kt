@@ -18,12 +18,13 @@ class ProductViewModel(private val repo: ProductRepository) : ViewModel() {
     // -----------------------------
     // LISTA DE PRODUCTOS (Flow del repo)
     // -----------------------------
-    val productos: StateFlow<List<Producto>> =
-        repo.productos.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            emptyList()
-        )
+    val productos = repo.productos
+
+    init {
+        viewModelScope.launch {
+            repo.refrescar()
+        }
+    }
 
     // -----------------------------
     // FORMULARIO
@@ -103,6 +104,17 @@ class ProductViewModel(private val repo: ProductRepository) : ViewModel() {
             product.id?.let { repo.eliminar(it) }
         } catch (e: Exception) {
             _form.update { it.copy(error = e.message ?: "Error desconocido") }
+        }
+    }
+
+    // OBTENER UN PRODUCTO
+    private val _productoSeleccionado = MutableStateFlow<Producto?>(null)
+    val productoSeleccionado: StateFlow<Producto?> = _productoSeleccionado
+
+    fun cargarProducto(id: String) {
+        viewModelScope.launch {
+            val p = repo.obtener(id)
+            _productoSeleccionado.value = p
         }
     }
 }

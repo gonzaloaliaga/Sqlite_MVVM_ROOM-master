@@ -69,7 +69,8 @@ fun LoginScreen(uservm: UsuarioViewModel, navController: NavController, onLoginS
 
             Button(
                 onClick = { uservm.login(onLoginSuccess) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = form.correo.isNotBlank() && form.pass.isNotBlank()
             ) {
                 Text("Ingresar")
             }

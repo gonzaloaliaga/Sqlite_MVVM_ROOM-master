@@ -2,62 +2,86 @@ package com.example.gonzaloaliaga.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gonzaloaliaga.data.cart.CarritoConProducto
 import com.example.gonzaloaliaga.data.repository.CarritoRepository
-import com.example.gonzaloaliaga.data.model.Producto
-import kotlinx.coroutines.Job
+import com.example.gonzaloaliaga.model.Carrito
+import com.example.gonzaloaliaga.model.CarritoItem
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CarritoViewModel(
-    private val repository: CarritoRepository,
+    private val repo: CarritoRepository,
     private val uservm: UsuarioViewModel
 ) : ViewModel() {
 
-    private val _carrito = MutableStateFlow<List<CarritoConProducto>>(emptyList())
-    val carrito: StateFlow<List<CarritoConProducto>> = _carrito.asStateFlow()
+    // -----------------------------
+    // CARRITO COMPLETO
+    // -----------------------------
+    private val _carrito = MutableStateFlow<Carrito?>(null)
+    val carrito: StateFlow<Carrito?> = _carrito.asStateFlow()
 
-    private var carritoJob: Job? = null
-
+    // -----------------------------
+    // CARGAR CARRITO DEL USUARIO
+    // -----------------------------
     init {
         viewModelScope.launch {
             uservm.currentUser.collect { user ->
-                // Cancelar la colección anterior si existía
-                carritoJob?.cancel()
-                _carrito.value = emptyList() // limpiar carrito anterior
+                if (user == null) {
+                    _carrito.value = null
+                    return@collect
+                }
 
-                if (user != null) {
-                    carritoJob = viewModelScope.launch {
-                        repository.obtenerCarrito(user.id).collect { items ->
-                            _carrito.value = items
-                        }
-                    }
+                try {
+                    val result = repo.obtenerCarrito(user.id!!)
+                    _carrito.value = result
+                } catch (e: Exception) {
+                    _carrito.value = null
                 }
             }
         }
     }
 
-    fun agregar(producto: Producto) = viewModelScope.launch {
+    // -----------------------------
+    // AGREGAR ITEM
+    // -----------------------------
+    fun agregar(productoId: String) = viewModelScope.launch {
         val user = uservm.currentUser.value ?: return@launch
-        repository.agregarAlCarrito(user.id, producto.id)
+
+        val item = CarritoItem(
+            productoId = productoId,
+            cantidad = 1
+        )
+
+        try {
+            val updated = repo.agregarItem(user.id!!, item)
+            _carrito.value = updated
+        } catch (_: Exception) { }
     }
 
-    fun restar(producto: Producto) = viewModelScope.launch {
+    // -----------------------------
+    // DISMINUIR ITEM
+    // -----------------------------
+    fun disminuir(productoId: String) = viewModelScope.launch {
         val user = uservm.currentUser.value ?: return@launch
-        repository.restarDelCarrito(user.id, producto.id)
+
+        try {
+            val updated = repo.disminuirItem(user.id!!, productoId)
+            _carrito.value = updated
+        } catch (_: Exception) { }
     }
 
-    fun eliminar(producto: Producto) = viewModelScope.launch {
-        val user = uservm.currentUser.value ?: return@launch
-        repository.eliminar(user.id, producto.id)
-    }
-
+    // -----------------------------
+    // VACIAR COMPLETAMENTE
+    // -----------------------------
     fun vaciar() = viewModelScope.launch {
         val user = uservm.currentUser.value ?: return@launch
-        repository.vaciar(user.id)
-    }
 
-    fun total(): Double = carrito.value.sumOf { it.precio * it.cantidad }
+        try {
+            repo.vaciarCarrito(user.id!!)
+            _carrito.value = Carrito(usuarioId = user.id!!, items = emptyList())
+        } catch (_: Exception) { }
+    }
 }

@@ -8,12 +8,3 @@ data class Producto (
     val categoria: String,
     val img: String,
 )
-
-// SOPORTE HATEOAS
-data class ProductoEmbedded(
-    val productoList: List<Producto>
-)
-
-data class ProductoResponse(
-    val _embedded: ProductoEmbedded?
-)

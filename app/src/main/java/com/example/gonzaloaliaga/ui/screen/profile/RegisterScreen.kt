@@ -76,14 +76,19 @@ fun RegisterScreen(
             val context = LocalContext.current
             Button(
                 onClick = {
-                    uservm.registrar {
-                        // Si el registro fue exitoso, vuelve al login
-                        Toast.makeText(context, "¡Usuario registrado! Inicia sesión para ingresar a la aplicación.", Toast.LENGTH_SHORT).show()
-                        uservm.limpiarError()
-                        navController.popBackStack()
-                    }
+                    uservm.verificarCorreoAntesDeRegistrar(
+                        correo = form.correo,
+                        onCorreoValido = { uservm.registrar {                             // Si el registro fue exitoso, vuelve al login
+                            Toast.makeText(context, "¡Usuario registrado! Inicia sesión para ingresar a la aplicación.", Toast.LENGTH_SHORT).show()
+                            uservm.limpiarError()
+                            navController.popBackStack()
+                        }
+                                         },
+                        onCorreoDuplicado = { uservm.setError("El correo ya está registrado") }
+                    )
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = form.correo.isNotBlank() && form.pass.isNotBlank()
             ) {
                 Text("Registrar")
             }

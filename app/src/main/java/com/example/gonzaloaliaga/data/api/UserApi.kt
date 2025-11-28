@@ -1,7 +1,8 @@
 package com.example.gonzaloaliaga.data.api
 
-import com.example.gonzaloaliaga.model.Usuario
-import com.example.gonzaloaliaga.model.UsuarioResponse
+import com.example.gonzaloaliaga.data.model.Usuario
+import com.example.gonzaloaliaga.data.model.UsuarioResponse
+
 import retrofit2.http.*
 
 interface UserApi {
