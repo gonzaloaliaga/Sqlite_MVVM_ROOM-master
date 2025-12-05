@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Sqlite"
+rootProject.name = "ComiCommerce"
 include(":app") 
  
