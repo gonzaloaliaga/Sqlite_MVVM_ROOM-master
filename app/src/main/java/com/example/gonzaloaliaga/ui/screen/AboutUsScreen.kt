@@ -53,9 +53,14 @@ fun AboutUsScreen(uservm: UsuarioViewModel, prodvm: ProductViewModel, navControl
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Somos una empresa dedicada a ofrecer productos de calidad, con una amplia variedad de artículos que abarcan todas tus necesidades. Nos enfocamos en brindar una experiencia de compra confiable, ágil y accesible para todos nuestros clientes, procurando siempre la satisfacción y la confianza en cada compra. Nuestro compromiso es ofrecer productos útiles y de calidad a precios competitivos, adaptándonos a las necesidades de un mercado diverso y en constante cambio.")
+            Text("En ComiCommerce somos apasionados por las historias que cobran vida en cada página. " +
+                    "Nos dedicamos a la venta de cómics y mangas de todas las categorías, desde clásicos imperdibles " +
+                    "y superhéroes icónicos hasta obras independientes, fantasía, romance, terror y mucho más. " +
+                    "Nuestra misión es acercar a lectores de todas las edades a mundos increíbles, personajes inolvidables " +
+                    "y aventuras que inspiran. Creemos que siempre hay una historia perfecta esperando ser descubierta, " +
+                    "y queremos ser el puente que te lleve a ella.")
             Image(
-                painter = painterResource(id = R.drawable.skate),
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Imagen decorativa",
                 modifier = Modifier
                     .fillMaxWidth(),
